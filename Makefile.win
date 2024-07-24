@@ -1,0 +1,35 @@
+CC=gcc
+CXX=g++
+
+ExternalLibs=..\..\ExternalLibs
+INCLUDES=-I$(ExternalLibs)\include
+
+glfw_lib=$(ExternalLibs)\lib\GLFW\mingw-w64
+glew_lib=$(ExternalLibs)\lib\GLEW\x64
+vulkan_lib=C:\ExternalTools\Vulkan\1.3.283.0\Lib
+vulkan_incl=C:\ExternalTools\Vulkan\1.3.283.0\Include
+
+INCLUDES+=-I$(vulkan_incl)
+
+LIBRARIES=-L$(glfw_lib) -L$(glew_lib) -L$(vulkan_lib)
+CFLAGS = -Wall -ggdb -O2 $(INCLUDES)
+CXXFLAGS = -std=c++17 -Wall -ggdb -O2 $(INCLUDES)
+LDFLAGS = $(LIBRARIES) -lglfw -lvulkan -ldl -lpthread -lX11 -lXxf86vm -lXrandr -lXi
+
+TARGET = VulkanTest
+cpp_files = main.cpp
+objects = $(cpp_files:.cpp=.o) 
+headers=
+
+all: $(TARGET)
+
+$(TARGET): $(objects)
+	$(CXX) -o $@ $^ $(LDFLAGS)
+
+.PHONY: test clean
+
+test: $(TARGET)
+	./$(TARGET)
+
+clean:
+	-rm $(TARGET) $(objects)
